@@ -113,9 +113,22 @@ server.post("/api/login", async (req, res) => {
       res.status(500).json(err);
     });
 });
-
 //Registered users
 //"username":"ten@gmail.com",
 // "password":"boo"
+
+server.get("/api/logout", (req, res) => {
+  if (req.session) {
+    req.session.destroy(err => {
+      if (err) {
+        res.json({ message: "Error logging out" });
+      } else {
+        res.status(200).json({ message: "logout succesful" });
+      }
+    });
+  } else {
+    res.status(200).json({ message: "You were not logged in" });
+  }
+});
 
 module.exports = server;
