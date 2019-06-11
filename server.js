@@ -118,7 +118,9 @@ server.post("/api/login", async (req, res) => {
 // "password":"boo"
 
 server.get("/api/logout", (req, res) => {
+  //Checks if theres a session
   if (req.session) {
+    //If there is a session the session is destroyed and user must login again
     req.session.destroy(err => {
       if (err) {
         res.json({ message: "Error logging out" });
