@@ -7,6 +7,7 @@ const knex = require("knex");
 const knexConfig = require("./knexfile.js");
 const db = knex(knexConfig.development);
 const Users = require("./data/users/users-model.js");
+const restricted = require("./data/auth/restricted-middle.js");
 
 const server = express();
 
@@ -67,29 +68,29 @@ server.post("/api/register", (req, res) => {
   }
 });
 
-server.get("/api/users", async (req, res) => {
-  try {
-    const users = await db("users");
-    res.status(200).json(users);
-  } catch (err) {
-    res.status(500).json({
-      message: "Error in retrieving users"
-    });
-  }
-});
-
-// server.get("/api/users", async (req, res) => {
+// server.get("/api/users", restricted, async (req, res) => {
 //   try {
-//     const getUsers = await users.find();
-//     if (getUsers) {
-//       res.status(200).json(getUsers);
-//     } else {
-//       res.status(400).json({ message: "cant get users" });
-//     }
+//     const users = await db("users");
+//     res.status(200).json(users);
 //   } catch (err) {
-//     res.status(500).json({ message: "Error." });
+//     res.status(500).json({
+//       message: "Error in retrieving users"
+//     });
 //   }
 // });
+
+server.get("/api/users", restricted, async (req, res) => {
+  try {
+    const getUsers = await Users.find();
+    if (getUsers) {
+      res.status(200).json(getUsers);
+    } else {
+      res.status(400).json({ message: "cant get users" });
+    }
+  } catch (err) {
+    res.status(500).json({ message: "Error." });
+  }
+});
 
 server.post("/api/login", async (req, res) => {
   let { username, password } = req.body;
