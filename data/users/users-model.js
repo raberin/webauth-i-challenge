@@ -12,8 +12,9 @@ function find() {
   return db("users");
 }
 
-//Searches through db with a filter
+//Searches through db with a filter/condition
 function findBy(filter) {
+  //.where can accept objects {xx:yy} read as (where xx = yy)
   return db("users").where(filter);
 }
 
